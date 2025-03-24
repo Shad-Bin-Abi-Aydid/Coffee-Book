@@ -12,8 +12,8 @@ const Categories = ({ categories }) => {
           to= {`/category/${category.category}`}
           key={category.category}
           role="tab"
-          className="tab"
-        >
+          className={({isActive})=> `tab text-2xl font-thin ${isActive ? 'tab-active':''}`}
+        >  
           {category.category}
         </NavLink>
       ))}

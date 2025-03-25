@@ -1,18 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import { useLoaderData, useParams } from 'react-router-dom';
 import nutrition from '../assets/images/nutrition.png';
+import { addFavorite, getAllFavorites } from '../utils';
 
 const CoffeeDetails = () => {
     const {id} = useParams();
     const data = useLoaderData();
     const [coffee, setCoffee] = useState({});
+    const [isFavorite, setIsFavorite] = useState(false);
 
-    const {description, category, making_process, ingredients, rating, popularity,image} = coffee;
+    const {description, category, making_process, rating, popularity,image} = coffee;
 
     useEffect(() =>{
         const singleData = data.find(coffee => coffee.id == id)
         setCoffee(singleData);
+
+        const favorites = getAllFavorites()
+
+        const isExist = favorites.find(item => item.id == singleData.id);
+        if(isExist){
+            setIsFavorite(true);
+        }
     },[data,id]);
+
+
+    const handleFavorite = coffee =>{
+        addFavorite(coffee);
+        setIsFavorite(true);
+    }
+
     return (
         <div className='space-y-10'>
             <h1 className='text-3xl font-thin'>{description}</h1>
@@ -24,7 +40,7 @@ const CoffeeDetails = () => {
                     <p className='font-semibold'>Rating: {rating}</p>
                 </div>
                 <div>
-                    <button className='btn btn-primary font-bold'>Add Favorite</button>
+                    <button disabled = {isFavorite} onClick={() => handleFavorite(coffee)} className='btn btn-primary font-bold'>Add Favorite</button>
                 </div>
             </div>
             <div className='flex flex-col md:flex-row justify-center  space-y-10'>
